@@ -1,5 +1,5 @@
 import { client } from "../app/lib/sanity";
-import Podcast from "./Podcast";
+import { HoverEffect } from "./ui/hover-effect-card";
 
 interface PodcastlistProps {
   truncateTo?: number; // Optional prop to limit number of podcasts
@@ -27,11 +27,18 @@ export default async function Podcastlist({ truncateTo }: PodcastlistProps) {
   // If truncateTo is provided, slice the data array
   const displayData = truncateTo ? data.slice(0, truncateTo) : data;
 
+  // Transform podcast data into the items format expected by HoverEffect
+  const items = displayData.map((podcast: any) => ({
+    title: podcast.title,
+    description: podcast.description,
+    link: `/episode/${podcast.slug.current}`,
+    imageUrl: podcast.thumbnailUrl,
+    imageAlt: podcast.title,
+  }));
+
   return (
-    <div>
-      {displayData.map((podcast: any) => (
-        <Podcast key={podcast._id} {...podcast} />
-      ))}
+    <div className="max-w-6xl mx-auto px-4 py-12">
+      <HoverEffect items={items} />
     </div>
   );
 }
